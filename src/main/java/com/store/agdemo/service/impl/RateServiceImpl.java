@@ -2,7 +2,6 @@ package com.store.agdemo.service.impl;
 
 import com.store.agdemo.entity.Product;
 import com.store.agdemo.entity.Rate;
-import com.store.agdemo.repository.ProductRepository;
 import com.store.agdemo.repository.RateRepository;
 import com.store.agdemo.service.ProductService;
 import com.store.agdemo.service.RateService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service(RateService.BEAN_NAME)
 public class RateServiceImpl implements RateService {

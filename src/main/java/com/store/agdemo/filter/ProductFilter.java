@@ -1,7 +1,6 @@
 package com.store.agdemo.filter;
 
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class ProductFilter implements Serializable {

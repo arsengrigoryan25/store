@@ -53,7 +53,6 @@ public class UserController {
     @PutMapping("/auth/{id}/change/status")
     @PreAuthorize("hasRole('ADMIN')")
     public void changeUserRole(@PathVariable("id") Long id){
-//        userService.getById(id).orElseThrow(() -> new StoreEntityNotFoundException(id, "User"));  // TODO Vorna aveli chisht
         try{
             userService.changeStatus(id);
         } catch(EntityNotFoundException e){
@@ -66,7 +65,7 @@ public class UserController {
      * @param size - the size of each pages
      * @return - page of users
      */
-    @GetMapping("/auth/")
+    @GetMapping("/auth")
     @PreAuthorize("hasRole('ADMIN')")
     public Page<UserModel> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         PageRequest pageable = PageRequest.of(page, size);
@@ -80,7 +79,7 @@ public class UserController {
         user.setAdmin(userModel.role.equals(User.Role.ADMIN.name()));
         user.setPassword(passwordEncoder.encode(userModel.password));
         user.setUsername(userModel.username);
-        user.setBlocked(false);
+        user.setBlocked(userModel.isBlocked);
         return user;
     }
     private UserModel convertToModel(User user){
@@ -88,6 +87,7 @@ public class UserController {
         userModel.id = user.getId();
         userModel.username = user.getUsername();
         userModel.role = user.isAdmin() ? User.Role.ADMIN.name() : User.Role.USER.name();
+        userModel.isBlocked = user.isBlocked();
         return  userModel;
     }
 }

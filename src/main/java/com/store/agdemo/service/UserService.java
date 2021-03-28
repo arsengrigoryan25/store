@@ -15,5 +15,5 @@ public interface UserService extends UserDetailsService {
     Page<User> getAll(Pageable pageable);
     Optional<User> getById(Long userId);
     User getByUsername(String userName);
-    void changeStatus(Long userId);
+    void changeStatus(Long userId) ;
 }

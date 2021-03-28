@@ -2,11 +2,9 @@ package com.store.agdemo.controller;
 
 import com.store.agdemo.entity.Category;
 import com.store.agdemo.entity.Product;
-import com.store.agdemo.entity.User;
 import com.store.agdemo.exception.StoreEntityNotFoundException;
 import com.store.agdemo.filter.ProductFilter;
 import com.store.agdemo.model.ProductModel;
-import com.store.agdemo.model.UserModel;
 import com.store.agdemo.service.CategoryService;
 import com.store.agdemo.service.ProductService;
 import com.store.agdemo.service.RateService;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController

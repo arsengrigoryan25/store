@@ -5,9 +5,11 @@ import com.store.agdemo.exception.IllegalUserStateException;
 import com.store.agdemo.repository.UserRepository;
 import com.store.agdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -36,11 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByUsername(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(EntityNotFoundException::new);// ToDO nayem miyusner-i mot el
-        if(user.isBlocked()){
-            throw new IllegalUserStateException(user.getUsername());
-        }
-        return user;
+        return userRepository.findByUsername(userName).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -53,11 +51,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException(s));
+        if(user.isBlocked()){
+            throw new IllegalUserStateException(user.getUsername());
+        }
         return new SecuredUser(user);
     }
 
     public static class SecuredUser implements UserDetails {
-        final private User user;
+        private final User user;
 
         SecuredUser(User user) {
             this.user = user;

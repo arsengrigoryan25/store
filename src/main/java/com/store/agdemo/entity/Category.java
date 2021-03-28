@@ -4,7 +4,11 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Category extends IdentifiedEntity<Long>{
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column
     private String name;
 
@@ -14,7 +18,13 @@ public class Category extends IdentifiedEntity<Long>{
 
     @OneToMany(mappedBy = "category")
     private Set<Product> product;
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getName() {
         return name;
     }

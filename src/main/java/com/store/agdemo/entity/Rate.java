@@ -4,7 +4,11 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class Rate extends IdentifiedEntity<Long> {
+public class Rate {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne(cascade={CascadeType.ALL})
     @JoinColumn(name="product_id")
     private Product product;
@@ -19,7 +23,13 @@ public class Rate extends IdentifiedEntity<Long> {
     private String comment;
     @Column
     private LocalDate created;
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
     public Product getProduct() {
         return product;
     }
