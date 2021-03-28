@@ -1,6 +1,6 @@
 # Service description
 
-Service is a RESTful API that is used to onnline shop
+Service is a RESTful API that is used to online shop
 
 # Documentation
 
