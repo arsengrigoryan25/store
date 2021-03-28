@@ -15,6 +15,7 @@ https://ag-store.herokuapp.com/swagger-ui.html#/
 - PostgreSQL
 - Flyway
 - Swagger
+- log4j
 
 
 ## Deployed
