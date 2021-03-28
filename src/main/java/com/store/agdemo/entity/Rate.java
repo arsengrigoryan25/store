@@ -15,7 +15,7 @@ public class Rate {
 
     @ManyToOne(cascade={CascadeType.ALL})
     @JoinColumn(name="user_id")
-    private User user;
+    private Users user;
 
     @Column
     private Integer rate;
@@ -38,11 +38,11 @@ public class Rate {
         this.product = product;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 

@@ -8,6 +8,7 @@ import com.store.agdemo.model.ProductModel;
 import com.store.agdemo.service.CategoryService;
 import com.store.agdemo.service.ProductService;
 import com.store.agdemo.service.RateService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/product")
 @Validated
 public class ProductController {
+    static final Logger log = Logger.getLogger(ProductController.class);
 
     @Autowired
     private ProductService productService;
@@ -41,11 +43,14 @@ public class ProductController {
     @PostMapping("/auth")
     @PreAuthorize("hasRole('ADMIN')")
     public ProductModel create(@Valid @RequestBody ProductModel productModel){
+        log.info("Start to creat product: " + productModel.toString());
         Category category = categoryService.getById(productModel.categoryId).orElseThrow(()-> new StoreEntityNotFoundException(productModel.categoryId, "Category"));
         Product product = convertToEntity(productModel);
         product.setCategory(category);
         Product productToSave = productService.create(product);
-        return convertToModel(productToSave);
+        ProductModel productModel1 = convertToModel(productToSave);
+        log.info("End to creat product: " + productModel.toString());
+        return productModel1;
     }
 
     /**
@@ -102,10 +107,12 @@ public class ProductController {
     @PatchMapping("/auth")
     @PreAuthorize("hasRole('ADMIN')")
     public void update(@Valid @RequestBody ProductModel productModel){
+        log.info("Start to update product: " + productModel.toString());
         Category category = categoryService.getById(productModel.categoryId).orElseThrow(() -> new StoreEntityNotFoundException(productModel.categoryId, "Category"));
         Product product = convertToEntity(productModel);
         product.setCategory(category);
         productService.update(product);
+        log.info("End  to update product: " + productModel.toString());
     }
 
     /**
@@ -116,9 +123,11 @@ public class ProductController {
     @DeleteMapping("/auth/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id){
+        log.info("Start to delete product: id = " + id);
         Product product = productService.getById(id).orElseThrow(() -> new StoreEntityNotFoundException(id, "Product"));
         rateService.deleteByProduct(product);
         productService.delete(id);
+        log.info("End to delete product: id = " + id);
     }
 
     private Product convertToEntity(ProductModel productModel){

@@ -1,6 +1,6 @@
 package com.store.agdemo.service.impl;
 
-import com.store.agdemo.entity.User;
+import com.store.agdemo.entity.Users;
 import com.store.agdemo.exception.IllegalUserStateException;
 import com.store.agdemo.repository.UserRepository;
 import com.store.agdemo.service.UserService;
@@ -22,35 +22,35 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User create(User user) {
+    public Users create(Users user) {
         return userRepository.save(user);
     }
 
     @Override
-    public Page<User> getAll(Pageable pageable) {
+    public Page<Users> getAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
     @Override
-    public Optional<User> getById(Long userId) {
+    public Optional<Users> getById(Long userId) {
         return userRepository.findById(userId);
     }
 
     @Override
-    public User getByUsername(String userName) {
+    public Users getByUsername(String userName) {
         return userRepository.findByUsername(userName).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public void changeStatus(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Users user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         user.setBlocked(!user.isBlocked());
         userRepository.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException(s));
+        Users user = userRepository.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException(s));
         if(user.isBlocked()){
             throw new IllegalUserStateException(user.getUsername());
         }
@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public static class SecuredUser implements UserDetails {
-        private final User user;
+        private final Users user;
 
-        SecuredUser(User user) {
+        SecuredUser(Users user) {
             this.user = user;
         }
 
@@ -99,14 +99,14 @@ public class UserServiceImpl implements UserService {
             return true;
         }
 
-        public User getUser() {
+        public Users getUser() {
             return this.user;
         }
 
-        private List<? extends GrantedAuthority> resolveAuthorities(User user) {
-            return user.isAdmin() ? Arrays.asList(new GrantedAuthorityImpl(User.Role.ADMIN.name()),
-                    new GrantedAuthorityImpl(User.Role.USER.name())):
-                    Collections.singletonList(new GrantedAuthorityImpl(User.Role.USER.name()));
+        private List<? extends GrantedAuthority> resolveAuthorities(Users user) {
+            return user.isAdmin() ? Arrays.asList(new GrantedAuthorityImpl(Users.Role.ADMIN.name()),
+                    new GrantedAuthorityImpl(Users.Role.USER.name())):
+                    Collections.singletonList(new GrantedAuthorityImpl(Users.Role.USER.name()));
         }
     }
 

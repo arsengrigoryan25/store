@@ -1,4 +1,4 @@
-create table "user"(
+create table users(
 	id serial not null
 		constraint user_pk
 			primary key,
@@ -9,7 +9,7 @@ create table "user"(
 );
 
 create unique index user_username_uindex
-	on "user" (username);
+	on users (username);
 
 create table category (
     id serial not null
@@ -39,7 +39,7 @@ create table rate(
     product_id int not null constraint rate_product_id_fk
 			references product (id),
     user_id int not null constraint rate_user_id_fk
-			references "user" (id),
+			references users (id),
     rate int not null,
     comment text null,
     created date not null

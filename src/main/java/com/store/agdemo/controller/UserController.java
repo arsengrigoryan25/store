@@ -1,12 +1,12 @@
 package com.store.agdemo.controller;
 
-import com.store.agdemo.entity.User;
+import com.store.agdemo.entity.Users;
 import com.store.agdemo.exception.StoreEntityConflictException;
 import com.store.agdemo.exception.StoreEntityNotFoundException;
 import com.store.agdemo.model.UserModel;
 import com.store.agdemo.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/user")
 @Validated
 public class UserController {
+    static final Logger log = Logger.getLogger(UserController.class);
+
     @Autowired
     private UserService userService;
 
@@ -38,11 +40,15 @@ public class UserController {
     @PostMapping
     public UserModel create(@Valid @RequestBody UserModel userModel) {
         userModel.role = "USER";
+        log.info("Start to creat user: " + userModel.toString());
         try{
-            User savedUser = userService.create(convertToEntity(userModel));
-            return convertToModel(savedUser);
-        } catch(DataIntegrityViolationException e){
+            userService.getByUsername(userModel.username);
             throw new StoreEntityConflictException(userModel.username);
+        } catch(EntityNotFoundException e){
+            Users savedUser = userService.create(convertToEntity(userModel));
+            UserModel model = convertToModel(savedUser);
+            log.info("End to creat user: " + model.toString());
+            return model;
         }
     }
 
@@ -54,10 +60,12 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public void changeUserRole(@PathVariable("id") Long id){
         try{
+            log.info("Start change status of user which id = " + id);
             userService.changeStatus(id);
         } catch(EntityNotFoundException e){
             throw new StoreEntityNotFoundException(id, "User");
         }
+        log.info("End change status of user which id = " + id);
     }
 
     /**
@@ -69,24 +77,24 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public Page<UserModel> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         PageRequest pageable = PageRequest.of(page, size);
-        Page<User> users = userService.getAll(pageable);
+        Page<Users> users = userService.getAll(pageable);
         return new PageImpl<>(users.getContent().stream().map(this::convertToModel).collect(Collectors.toList()), pageable, users.getTotalElements());
     }
 
-    private User convertToEntity(UserModel userModel){
-        User user = new User();
+    private Users convertToEntity(UserModel userModel){
+        Users user = new Users();
         user.setId(userModel.id);
-        user.setAdmin(userModel.role.equals(User.Role.ADMIN.name()));
+        user.setAdmin(userModel.role.equals(Users.Role.ADMIN.name()));
         user.setPassword(passwordEncoder.encode(userModel.password));
         user.setUsername(userModel.username);
         user.setBlocked(userModel.isBlocked);
         return user;
     }
-    private UserModel convertToModel(User user){
+    private UserModel convertToModel(Users user){
         UserModel userModel = new UserModel();
         userModel.id = user.getId();
         userModel.username = user.getUsername();
-        userModel.role = user.isAdmin() ? User.Role.ADMIN.name() : User.Role.USER.name();
+        userModel.role = user.isAdmin() ? Users.Role.ADMIN.name() : Users.Role.USER.name();
         userModel.isBlocked = user.isBlocked();
         return  userModel;
     }

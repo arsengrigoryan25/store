@@ -12,6 +12,12 @@ INSERT INTO category(name, parent_id) VALUES ('Սառնարաններ', 3);
 INSERT INTO category(name, parent_id) VALUES ('Գազօջախներ', 3);
 
 
+INSERT INTO product(title, price, description, category_id) VALUES ('Xiaomi Note 8', 100000, 'RAM 4GB, camera 48Mp', 4);
+INSERT INTO product(title, price, description, category_id) VALUES ('iPhone 11', 200000, 'RAM 4GB, camera 25Mp', 4);
+INSERT INTO product(title, price, description, category_id) VALUES ('Samsung A51', 150000, 'RAM 3GB, camera 40Mp', 4);
+INSERT INTO product(title, price, description, category_id) VALUES ('Sharp', 100000, 'Description Sharp', 8);
+INSERT INTO product(title, price, description, category_id) VALUES ('Hitachi', 200000, 'Description Hitachi', 8);
+INSERT INTO product(title, price, description, category_id) VALUES ('Toshiba', 150000, 'Description Toshiba', 8);
 
 
 

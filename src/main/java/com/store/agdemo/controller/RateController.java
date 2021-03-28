@@ -2,12 +2,13 @@ package com.store.agdemo.controller;
 
 import com.store.agdemo.entity.Product;
 import com.store.agdemo.entity.Rate;
-import com.store.agdemo.entity.User;
+import com.store.agdemo.entity.Users;
 import com.store.agdemo.exception.StoreEntityNotFoundException;
 import com.store.agdemo.model.RateModel;
 import com.store.agdemo.service.ProductService;
 import com.store.agdemo.service.RateService;
 import com.store.agdemo.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ import java.time.LocalDate;
 @Validated
 public class RateController {
 
+    static final Logger log = Logger.getLogger(RateController.class);
+
     @Autowired
     private RateService rateService;
     @Autowired
@@ -37,8 +40,11 @@ public class RateController {
      */
     @PostMapping("/auth")
     public RateModel create(@Valid @RequestBody RateModel rateModel) {
+        log.info("Start to creat rate: " + rateModel.toString());
         Rate rate = rateService.create(convertToEntity(rateModel));
-        return convertToModel(rate);
+        RateModel model = convertToModel(rate);
+        log.info("Start to creat rate: " + model.toString());
+        return model;
     }
 
     private Rate convertToEntity(RateModel rateModel){
@@ -48,7 +54,7 @@ public class RateController {
         rate.setCreated(LocalDate.now());
         Product product = productService.getById(rateModel.productId).orElseThrow(() -> new StoreEntityNotFoundException(rateModel.productId, "Product"));
         rate.setProduct(product);
-        User user = userService.getById(rateModel.userId).orElseThrow(() -> new StoreEntityNotFoundException(rateModel.productId, "User"));
+        Users user = userService.getById(rateModel.userId).orElseThrow(() -> new StoreEntityNotFoundException(rateModel.productId, "User"));
         rate.setUser(user);
 
         return rate;
