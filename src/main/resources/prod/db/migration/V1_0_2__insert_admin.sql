@@ -1,0 +1,2 @@
+-- INSERT INTO user VALUES (DEFAULT, 'admin', '$2a$10$b7qWxuECNKxM7aLkMwUCAeKgcwAFYB/R7yne/3i06.yN50zS3J1vG', 1, 0);
+INSERT INTO user VALUES (DEFAULT, 'admin', '$2a$10$x4Ks8akPszwHCQjuUYRM6edVeaihi2k7gtfnE6QMweBxz3.Rfc9p2',1,0)
